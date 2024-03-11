@@ -1,17 +1,22 @@
 import React, {useState,useEffect} from "react";
 import DashboardCard from './DashboardCard';
 import LineChart from './LineChart';
-import {getSpreadsheetData} from '../../services/googleSheetsApi';
+import getSpreadsheetData from '../../services/googleSheetsApi';
 
 const Dashboard = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        getSpreadsheetData().then((responseData) => {
-            setData(responseData);
-        }).catch((error) => {
-            console.error('Error fetching spreadsheet data: ',error);
-        });
+        const fetchData = async () => {
+            try {
+                const responseData = await getSpreadsheetData();
+                setData(responseData.values); // Assuming that responseData.values contains your data
+            } catch (error) {
+                console.error('Error fetching spreadsheet data:', error);
+            }
+        };
+
+        fetchData();
     }, []);
     return (
         <div>
