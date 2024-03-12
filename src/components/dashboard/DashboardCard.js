@@ -1,3 +1,5 @@
+/* src/components/dashboard/DashboardCard.js */
+
 import React from 'react';
 
 const DashboardCard = ({ title, value }) => {

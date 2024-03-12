@@ -1,3 +1,5 @@
+/* src/components/dashboard/chartConfigs.js */
+
 export const LineChartConfig = {
     type: 'line',
     width: '100%',

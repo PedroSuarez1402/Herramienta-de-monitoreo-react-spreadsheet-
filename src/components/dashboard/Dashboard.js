@@ -1,3 +1,5 @@
+/* src/components/dashboard/Dashboard.js */
+
 import React, {useState,useEffect} from "react";
 import DashboardCard from './DashboardCard';
 import LineChart from './LineChart';
@@ -10,7 +12,11 @@ const Dashboard = () => {
         const fetchData = async () => {
             try {
                 const responseData = await getSpreadsheetData();
-                setData(responseData.values); // Assuming that responseData.values contains your data
+                if (responseData.values) {
+                    setData(responseData.values);
+                } else {
+                    console.error('No data found in response:', responseData);
+                }
             } catch (error) {
                 console.error('Error fetching spreadsheet data:', error);
             }
@@ -18,23 +24,26 @@ const Dashboard = () => {
 
         fetchData();
     }, []);
+
     return (
         <div>
             <h1>Dashboard</h1>
-            <LineChart data={data} />
+            {data.length > 0 && (
+                <LineChart data={data} />
+            )}
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <DashboardCard title="Valor más alto" value={Math.max(...data)} />
-            <DashboardCard title="Valor más bajo" value={Math.min(...data)} />
-            <DashboardCard title="Promedio" value={calculateAverage(data)} />
+                <DashboardCard title="Valor más alto" value={Math.max(...data)} />
+                <DashboardCard title="Valor más bajo" value={Math.min(...data)} />
+                <DashboardCard title="Promedio" value={calculateAverage(data)} />
             </div>
         </div>
-        );
-    };
-    
-    // Función para calcular el promedio de los datos
-    const calculateAverage = (data) => {
-        const sum = data.reduce((acc, curr) => acc + curr, 0);
-        return sum / data.length;
-    };
-    
-    export default Dashboard;
+    )
+};
+
+// Función para calcular el promedio de los datos
+const calculateAverage = (data) => {
+    const sum = data.reduce((acc, curr) => acc + curr, 0);
+    return sum / data.length;
+};
+
+export default Dashboard;
